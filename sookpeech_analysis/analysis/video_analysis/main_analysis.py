@@ -9,6 +9,10 @@ def start_analysis(user_id, practice_id, rand, pose_sensitivity, eyes_sensitivit
     eyes_result = eyes_tracking(mp4_file_path, mp4_file_title, eyes_sensitivity)
 
     video_result = dict(pose_result, **eyes_result)
+    video_result = dict(
+        {"pose": pose_result},
+        **{"eyes": eyes_result}
+    )
     
     return video_result
 
