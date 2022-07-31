@@ -4,9 +4,9 @@ from .pause_detection import *
 from .voice_recognition import *
 from .chars_analysis import *
 
-def start_analysis(user_id, rand, gender):
+def start_analysis(user_id, practice_id, rand, gender):
     wav_file_path = "./analysis/wavs/"
-    wav_file_title = f'{user_id}_{rand}'
+    wav_file_title = f'{user_id}_{practice_id}_{rand}'
 
     # 1) get wav_file size
     wav_file_duration = getDurationSec(wav_file_path+wav_file_title+".wav")

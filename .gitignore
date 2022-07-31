@@ -2,6 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
 
 myvenv/
+sookpeech_analysis/analysis/mp4s/
+sookpeech_analysis/analysis/wavs/
+keys.py
 
 ### Django ###
 *.log
