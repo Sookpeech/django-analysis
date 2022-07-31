@@ -6,10 +6,11 @@ import boto3
 import json
 import subprocess
 from moviepy.editor import *
-from .voice_analysis import main_analysis as ma
+from .voice_analysis import main_analysis as ma_voice
+from .video_analysis import main_analysis as ma_video
 
 @method_decorator(csrf_exempt, name='dispatch')
-def analysis(request, user_id, practice_id, rand, gender, sensitivity):
+def analysis(request, user_id, practice_id, rand, gender, pose_sensitivity, eyes_sensitivity):
     try: 
         # 1) s3에서 영상 가져온 후 mp4 저장시키기
         s3_resource = boto3.resource('s3')
@@ -24,12 +25,18 @@ def analysis(request, user_id, practice_id, rand, gender, sensitivity):
         subprocess.call(command, shell=True)
 
         # TODO: 3) 영상 분석
-        
-        # 4) 음성 분석
-        voice_analysis_results = ma.start_analysis(user_id, practice_id, rand, gender)
-        return JsonResponse((voice_analysis_results))
+        video_analysis_results = ma_video.start_analysis(user_id, practice_id, rand, pose_sensitivity, eyes_sensitivity)
+        video_dict = {"video": video_analysis_results}
 
-        # TODO: 5) wav file, mp4 file 삭제
+        # 4) 음성 분석
+        voice_analysis_results = ma_voice.start_analysis(user_id, practice_id, rand, gender)
+        voice_dict = {"voice": voice_analysis_results}
+
+        # 5) Json 형태로 response
+        analysis_results = dict(video_dict, **voice_dict)
+        return JsonResponse((analysis_results))
+
+        # TODO: 6) wav file, mp4 file 삭제
     except Exception as e:
         print(e)
         return JsonResponse({
