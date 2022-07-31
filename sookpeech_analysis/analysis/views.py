@@ -9,7 +9,7 @@ from moviepy.editor import *
 from .voice_analysis import main_analysis as ma
 
 @method_decorator(csrf_exempt, name='dispatch')
-def analysis(request, user_id, practice_id, rand, gender):
+def analysis(request, user_id, practice_id, rand, gender, sensitivity):
     try: 
         # 1) s3에서 영상 가져온 후 mp4 저장시키기
         s3_resource = boto3.resource('s3')
