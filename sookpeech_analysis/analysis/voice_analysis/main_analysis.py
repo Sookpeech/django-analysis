@@ -45,9 +45,8 @@ def start_analysis(user_id, practice_id, rand, gender):
     # TODO: 8) wav file, mp4 file 삭제
     file_path = f'{wav_file_path}{wav_file_title}'
     for i in range(chunk_count):
-        file_path = f'{file_path}_{i}.wav'
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        if os.path.exists(f'{file_path}_{i}.wav'):
+            os.remove(f'{file_path}_{i}.wav')
     os.remove(f'{file_path}.wav')
 
     return {
