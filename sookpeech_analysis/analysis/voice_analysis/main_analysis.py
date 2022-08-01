@@ -21,7 +21,7 @@ def start_analysis(user_id, practice_id, rand, gender):
     chunk_count = splitByPause(wav_file_path, wav_file_title) + 1
 
     # 4) start speech to text
-    save_file_count = uploadTos3(wav_file_title, wav_file_path, chunk_count, user_id, rand)
+    save_file_count = uploadTos3(wav_file_title, wav_file_path, chunk_count, user_id, practice_id, rand)
     transcripts = return_transcripts_async(save_file_count, wav_file_title, user_id, rand)
 
     # 5) preprocessing transcripts

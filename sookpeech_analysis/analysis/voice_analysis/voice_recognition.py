@@ -18,8 +18,14 @@ my_config = Config(
      }
 )
 
-def uploadTos3(wav_file_title, wav_file_path, count, user_id, rand):
+def uploadTos3(wav_file_title, wav_file_path, count, user_id, practice_id, rand):
     s3 = boto3.resource('s3')
+    # 원본 wav 파일 저장
+    try:
+        upload = s3.Bucket(bucket_name).put_object(Key="{}/{}.wav".format(user_id, practice_id), Body=audio)
+    except:
+        print(f'failed to upload original wav file = {user_id}/{practice_id}.wav')
+
     save_cnt = 0
     for i in range(count):
         file = '{}{}_{}.wav'.format(wav_file_path, wav_file_title, i)
