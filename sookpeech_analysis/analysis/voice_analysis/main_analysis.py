@@ -1,4 +1,6 @@
+import chunk
 import wave
+import os
 from .tone_analysis import *
 from .pause_detection import *
 from .voice_recognition import *
@@ -39,6 +41,14 @@ def start_analysis(user_id, practice_id, rand, gender):
     # 7) delete s3 files and transcribe job
     deleteTranscribeJob(wav_file_title, save_file_count)
     deleteS3WavFile(user_id, rand)
+
+    # TODO: 8) wav file, mp4 file 삭제
+    file_path = f'{wav_file_path}{wav_file_title}'
+    for i in range(chunk_count):
+        file_path = f'{file_path}_{i}.wav'
+        if os.path.exists(file_path):
+            os.remove(file_path)
+    os.remove(f'{file_path}.wav')
 
     return {
         'speed': round(words_count/(wav_file_duration/60)),

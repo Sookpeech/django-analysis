@@ -1,3 +1,4 @@
+import os
 from .pose_estimation import *
 from .eyes_tracking import *
 
@@ -16,5 +17,10 @@ def start_analysis(user_id, practice_id, rand, pose_sensitivity, eyes_sensitivit
         **{"eyes": eyes_result}
     )
     
+    # mp4 파일 삭제
+    file_path = f'{mp4_file_path}{mp4_file_title}.mp4'
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
     return video_result
 
