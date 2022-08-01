@@ -4,5 +4,5 @@ from analysis import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('analysis/<int:user_id>/<int:practice_id>/<int:rand>/<str:gender>', views.analysis, name='analysis'),
+    path('analysis/<int:user_id>/<int:practice_id>/<int:rand>/<str:gender>/<int:pose_sensitivity>/<int:eyes_sensitivity>', views.analysis, name='analysis'),
 ]
