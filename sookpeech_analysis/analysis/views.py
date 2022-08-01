@@ -21,14 +21,17 @@ def analysis(request, user_id, practice_id, rand, gender, pose_sensitivity, eyes
         f.write(video_bytes)
         f.close()
         # 2) 영상에서 음성 추출
+        print(">>>> step: 영상에서 음성 추출")
         command = "ffmpeg -i {} -ab 160k -ac 2 -ar 44100 -vn {}".format(f'./analysis/mp4s/{user_id}_{practice_id}_{rand}.mp4', f'./analysis/wavs/{user_id}_{practice_id}_{rand}.wav', format="wav")
         subprocess.call(command, shell=True)
 
         # TODO: 3) 영상 분석
+        print(">>>> step: 영상 분석")
         video_analysis_results = ma_video.start_analysis(user_id, practice_id, rand, pose_sensitivity, eyes_sensitivity)
         video_dict = {"video": video_analysis_results}
 
         # 4) 음성 분석
+        print(">>>> step: 음성 분석")
         voice_analysis_results = ma_voice.start_analysis(user_id, practice_id, rand, gender)
         voice_dict = {"voice": voice_analysis_results}
 

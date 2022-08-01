@@ -146,7 +146,7 @@ def eyes_tracking(mp4_file_path, mp4_file_title, sensitivity):
     print("얼굴 움직임 시간 : ", face_count/FPS)
 
     return {
-        "script_duration": script_count/FPS - correction,
+        "script_duration": script_count/FPS - correction if script_count/FPS - correction>0 else 0.0,
         "around_duration": eye_count/FPS,
         "face_move_duration": face_count/FPS
     }

@@ -18,13 +18,14 @@ def pose_estimation(mp4_file_path, mp4_file_title, sensitivity):
     duration = frame_count/FPS # 동영상 길이
     pTime = 0
 
-    count = 0 # 자세가 바르지 않은 시간
-    # 각 1,2,3 제스처를 몇 초동안 했는지 세는 변수
+    # 자세가 바르지 않은 시간을 세는 변수
+    count = 0
+    # 각 제스처를 몇 초동안 했는지 세는 변수
     first_count = 0
     second_count = 0
     third_count = 0
-    
-    f_count = 0 # 프레임 변수
+    # 프레임 변수
+    f_count = 0
 
     p_before = 0
     p_present = 0
@@ -33,11 +34,11 @@ def pose_estimation(mp4_file_path, mp4_file_title, sensitivity):
     f_before = 0
     f_present = 0
 
-    # 두번째 제스처 flag 변수
+    # 두 번째 제스처 flag 변수
     s_before = 0
     s_present = 0
 
-    # 세번째 제스처 flag 변수
+    # 세 번째 제스처 flag 변수
     t_before = 0
     t_present = 0
 
@@ -52,17 +53,17 @@ def pose_estimation(mp4_file_path, mp4_file_title, sensitivity):
     while True:
         success, img = cap.read()
 
-        # 원하는 프레임 단위로 cut
-        cap.set(cv2.CAP_PROP_POS_FRAMES, f_count/2);
+    # 원하는 프레임 단위로 cut
+        cap.set(cv2.CAP_PROP_POS_FRAMES,f_count/2);
         f_count += FPS
 
-        # 동영상이 끝나면 break
-        if(np.shape(img)==()): break
+    #     동영상이 끝나면 break
+        if (np.shape(img) == ()): break
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         results = pose.process(imgRGB)
-
-        if results.pose_landmark is None: break
-
+        
+        if results.pose_landmarks is None: break
+        
         left_shoulder = results.pose_landmarks.landmark[11]
         right_shoulder = results.pose_landmarks.landmark[12]
         
@@ -74,10 +75,10 @@ def pose_estimation(mp4_file_path, mp4_file_title, sensitivity):
         
         left_hip = results.pose_landmarks.landmark[23]
         right_hip = results.pose_landmarks.landmark[24]
-
+        
         if results.pose_landmarks:
             mpDraw.draw_landmarks(img, results.pose_landmarks, mpPose.POSE_CONNECTIONS)
-        
+            
             if p_before == p_present and p_present == 1:
                 count += FPS/2
                 
@@ -94,63 +95,75 @@ def pose_estimation(mp4_file_path, mp4_file_title, sensitivity):
             f_before = f_present
             s_before = s_present
             t_before = t_present
+                
 
-            # 자세 분석
+    # 자세 분석
             if (abs((left_shoulder.x + right_shoulder.x) / 2 - 0.5) >= 0.1):
-                # print("몸을 화면 가운데에 맞춰주세요.")
+    #             print("몸을 화면 가운데에 맞춰주세요.")
                 cv2.putText(img, "Please adjust your body to the standard.", (100,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
 
             if (abs(left_shoulder.y - right_shoulder.y) >= (11 - sensitivity) * 0.01):
-                # print("두 어깨의 균형이 맞지 않습니다.")
+    #             print("두 어깨의 균형이 맞지 않습니다.")
                 p_present = 1
                 cv2.putText(img, "The posture is not correct.", (100,100), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
             else:
                 p_present = 0
-            
-            # 제스처 분석
-            # 손이 얼굴 위로 올라갔을 때
+
+    # 제스처 분석
+    # 손이 얼굴 위로 올라갔을 때
             if ((left_wrist.x < left_shoulder.x) and (left_wrist.x > right_shoulder.x) \
             and (left_wrist.y < left_shoulder.y)):
-                # print("1번 제스처")
+    #             print("1번 제스처")
                 f_present = 1
                 cv2.putText(img, "Please adjust your body to the standard.", (100,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
 
             elif ((right_wrist.x < left_shoulder.x) and (right_wrist.x > right_shoulder.x) \
             and (right_wrist.y < right_shoulder.y)):
-                # print("1번 제스처")
+    #             print("1번 제스처")
                 f_present = 1
                 cv2.putText(img, "The posture is not correct.", (100,100), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
             else:
                 f_present = 0
-            
-            # 허리에 손을 올렸을 때
+        
+    # 팔짱 끼거나 한 쪽 팔을 잡았을 때, 손 맞잡을 때
+            if (abs(left_wrist.x - right_shoulder.x) <= sensitivity * 0.01 or abs(left_wrist.x - right_shoulder.x) <= sensitivity * 0.01):
+    #             print("2번 제스처")
+                s_present = 1
+                cv2.putText(img, "Please adjust your body to the standard.", (100,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
+            else:
+                s_present = 0
+
+    # 허리에 손을 올렸을 때
             if (abs(left_wrist.x - left_hip.x) <= sensitivity * 0.01 and abs(left_wrist.y - left_shoulder.y) <= sensitivity * 0.01):
-                # print("3번 제스처")
+    #             print("3번 제스처")
                 t_present = 1
                 cv2.putText(img, "Please adjust your body to the standard.", (100,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
                 
             elif (abs(right_wrist.x - right_hip.x) <= sensitivity * 0.01 and abs(right_wrist.y - right_shoulder.y) <= sensitivity * 0.01):
-                # print("3번 제스처")
+    #             print("3번 제스처")
                 t_present = 1
                 cv2.putText(img, "Please adjust your body to the standard.", (100,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
             else:
                 t_present = 0
             
-            index += 1
-
+            index += 1        
+                
         cTime = time.time()
         fps = 1/(cTime-pTime)
         pTime = cTime
 
-        # cv2.imshow("pose", img)
-        # cv2.waitKey(1)
-
-        # if cv2.waitKey(1) & 0xFF == ord('q'):
-        #     break
-
+    #     cv2.putText(img, str(int(fps)), (50,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
+    #     cv2.namedWindow('pose', cv2.WINDOW_NORMAL)
+        cv2.imshow("pose", img)
+        cv2.waitKey(1)
+        
+        # 웹캠 이용시 q 입력하면 끔
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        
     end = time.time()
     cap.release()
-    # cv2.destroyWindow("pose")
+    cv2.destroyWindow("pose")
 
     minutes = int(duration / 60)
     seconds = duration % 60
