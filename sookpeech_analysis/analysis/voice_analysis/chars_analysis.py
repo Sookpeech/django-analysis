@@ -1,7 +1,6 @@
 from hanspell import spell_checker
 import urllib3
 import json
-from keys import ACCESS_KEY
 
 def adjustSpacing(transcripts):
     print("\n")
@@ -25,7 +24,7 @@ def countNumOfWords(transcript):
 
 def checkClosingRemarks(transcript):
     openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU_spoken"
-    accessKey = ACCESS_KEY
+    accessKey = "0bb91cbb-50c3-44e6-82d0-4813ac145e65"
     analysisCode = "morp"
     text = transcript
     result = False
