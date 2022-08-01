@@ -154,16 +154,16 @@ def pose_estimation(mp4_file_path, mp4_file_title, sensitivity):
 
     #     cv2.putText(img, str(int(fps)), (50,50), cv2.FONT_HERSHEY_SIMPLEX,1,(255,0,0), 3)
     #     cv2.namedWindow('pose', cv2.WINDOW_NORMAL)
-        cv2.imshow("pose", img)
-        cv2.waitKey(1)
+        # cv2.imshow("pose", img)
+        # cv2.waitKey(1)
         
         # 웹캠 이용시 q 입력하면 끔
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        #         break
         
     end = time.time()
     cap.release()
-    cv2.destroyWindow("pose")
+    # cv2.destroyWindow("pose")
 
     minutes = int(duration / 60)
     seconds = duration % 60
