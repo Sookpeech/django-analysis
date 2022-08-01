@@ -39,7 +39,7 @@ def analysis(request, user_id, practice_id, rand, gender, pose_sensitivity, eyes
         analysis_results = dict(video_dict, **voice_dict)
         return JsonResponse((analysis_results))
 
-        # TODO: 6) wav file, mp4 file 삭제
+
     except Exception as e:
         print(e)
         return JsonResponse({
