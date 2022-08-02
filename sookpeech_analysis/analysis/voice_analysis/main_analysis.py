@@ -6,9 +6,9 @@ from .pause_detection import *
 from .voice_recognition import *
 from .chars_analysis import *
 
-def start_analysis(user_id, practice_id, rand, gender):
+def start_analysis(user_id, practice_id, gender):
     wav_file_path = "./analysis/wavs/"
-    wav_file_title = f'{user_id}_{practice_id}_{rand}'
+    wav_file_title = f'{user_id}_{practice_id}'
 
     # 1) get wav_file size
     wav_file_duration = getDurationSec(wav_file_path+wav_file_title+".wav")
@@ -23,8 +23,8 @@ def start_analysis(user_id, practice_id, rand, gender):
     chunk_count = splitByPause(wav_file_path, wav_file_title) + 1
 
     # 4) start speech to text
-    save_file_count = uploadTos3(wav_file_title, wav_file_path, chunk_count, user_id, practice_id, rand)
-    transcripts = return_transcripts_async(save_file_count, wav_file_title, user_id, rand)
+    save_file_count = uploadTos3(wav_file_title, wav_file_path, chunk_count, user_id, practice_id)
+    transcripts = return_transcripts_async(save_file_count, wav_file_title, user_id)
 
     # 5) preprocessing transcripts
     result = adjustSpacing(transcripts)
@@ -40,7 +40,7 @@ def start_analysis(user_id, practice_id, rand, gender):
 
     # 7) delete s3 files and transcribe job
     deleteTranscribeJob(wav_file_title, save_file_count)
-    deleteS3WavFile(user_id, rand)
+    deleteS3WavFile(user_id)
 
     # TODO: 8) wav file, mp4 file 삭제
     file_path = f'{wav_file_path}{wav_file_title}'
