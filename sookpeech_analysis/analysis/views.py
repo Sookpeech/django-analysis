@@ -28,15 +28,13 @@ def analysis(request, user_id, practice_id, gender, pose_sensitivity, eyes_sensi
         # TODO: 3) 영상 분석
         print(">>>> step: 영상 분석")
         video_analysis_results = ma_video.start_analysis(user_id, practice_id, pose_sensitivity, eyes_sensitivity)
-        video_dict = {"video": video_analysis_results}
 
         # 4) 음성 분석
         print(">>>> step: 음성 분석")
         voice_analysis_results = ma_voice.start_analysis(user_id, practice_id, gender)
-        voice_dict = {"voice": voice_analysis_results}
 
         # 5) Json 형태로 response
-        analysis_results = dict(video_dict, **voice_dict)
+        analysis_results = dict(video_analysis_results, **voice_analysis_results)
         return JsonResponse((analysis_results))
 
 
