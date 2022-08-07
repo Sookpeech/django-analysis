@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import boto3
-import json
+import json, requests
 import subprocess
 from moviepy.editor import *
 from .voice_analysis import main_analysis as ma_voice
@@ -35,7 +35,11 @@ def analysis(request, user_id, practice_id, gender, pose_sensitivity, eyes_sensi
 
         # 5) Json 형태로 response
         analysis_results = dict(video_analysis_results, **voice_analysis_results)
-        return JsonResponse((analysis_results))
+        response = requests.post(
+            f'http://3.36.74.60/api/practices/analysis_complete/{practice_id}',
+            json = json.dumps(analysis_results)
+        )
+        return JsonResponse({"status_code": response.status_code})
 
 
     except Exception as e:
