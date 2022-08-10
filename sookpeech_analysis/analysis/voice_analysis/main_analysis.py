@@ -24,12 +24,9 @@ def start_analysis(user_id, practice_id, gender):
 
     # 4) start speech to text
     save_file_count = uploadTos3(wav_file_title, wav_file_path, chunk_count, user_id, practice_id)
-    transcripts = return_transcripts_async(save_file_count, wav_file_title, user_id)
+    result = return_transcripts_async(save_file_count, wav_file_title, user_id)
 
-    # 5) preprocessing transcripts
-    result = adjustSpacing(transcripts)
-
-    # 6) check speech speed & closing remarks
+    # 5) check speech speed & closing remarks
     words_count = 0 # count num of characters
     closing_remark_count = 0 # count num of sentences with appropriate closing remarks
     print("\n")
@@ -38,11 +35,11 @@ def start_analysis(user_id, practice_id, gender):
         words_count += countNumOfWords(result[i].checked)
         closing_remark_count += checkClosingRemarks(result[i].checked)
 
-    # 7) delete s3 files and transcribe job
+    # 6) delete s3 files and transcribe job
     deleteTranscribeJob(wav_file_title, save_file_count)
     deleteS3WavFile(user_id)
 
-    # TODO: 8) wav file, mp4 file 삭제
+    # 7) wav file, mp4 file 삭제
     file_path = f'{wav_file_path}{wav_file_title}'
     for i in range(chunk_count):
         if os.path.exists(f'{file_path}_{i}.wav'):
