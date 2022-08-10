@@ -1,19 +1,5 @@
-from hanspell import spell_checker
 import urllib3
 import json
-
-def adjustSpacing(transcripts):
-    print("\n")
-    print(">>>> 음성-텍스트 변환 시 오류를 줄이기 위해 띄어쓰기 전처리를 수행합니다.")
-    new_transcripts = []
-
-    for i in range(len(transcripts)):
-        new_sent = transcripts[i].replace(" ", '')
-        new_transcripts.append(new_sent)
-
-    result = spell_checker.check(new_transcripts)
-
-    return result
 
 def countNumOfWords(transcript):
     count = 0
