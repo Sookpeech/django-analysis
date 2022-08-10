@@ -9,6 +9,11 @@ from moviepy.editor import *
 from .voice_analysis import main_analysis as ma_voice
 from .video_analysis import main_analysis as ma_video
 
+def test(request):
+    return JsonResponse({
+        "response": "success"
+    })
+
 @method_decorator(csrf_exempt, name='dispatch')
 def analysis(request, user_id, practice_id, rand, gender, pose_sensitivity, eyes_sensitivity):
     try: 
