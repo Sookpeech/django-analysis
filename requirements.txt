@@ -12,7 +12,7 @@ decorator==4.4.2
 dj-database-url==1.0.0
 Django==4.0.6
 django-heroku==0.3.1
-dlib @ file:///C:/Users/user/Desktop/dlib-19.22.99-cp39-cp39-win_amd64.whl
+# dlib @ file:///C:/Users/user/Desktop/dlib-19.22.99-cp39-cp39-win_amd64.whl
 ffmpeg-python==0.2.0
 fonttools==4.34.4
 future==0.18.2
