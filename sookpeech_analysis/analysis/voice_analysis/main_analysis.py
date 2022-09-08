@@ -9,6 +9,9 @@ from .chars_analysis import *
 def start_analysis(user_id, practice_id, gender):
     wav_file_path = "./analysis/wavs/"
     wav_file_title = f'{user_id}_{practice_id}'
+    transcripts = []
+    words_count = 0 # count num of characters
+    closing_remark_count = 0 # count num of sentences with appropriate closing remarks
 
     # 1) get wav_file size
     wav_file_duration = getDurationSec(wav_file_path+wav_file_title+".wav")
@@ -24,16 +27,26 @@ def start_analysis(user_id, practice_id, gender):
 
     # 4) start speech to text
     save_file_count = uploadTos3(wav_file_title, wav_file_path, chunk_count, user_id, practice_id)
-    result = return_transcripts_async(save_file_count, wav_file_title, user_id)
+    print(">>>>>>>>>>save_file_count=", save_file_count)
+    transcripts = return_transcripts_async(save_file_count, wav_file_title, user_id)
+    print(">>>>>>>>>>transcripts=", transcripts)
 
-    # 5) check speech speed & closing remarks
+    # 5) preprocessing transcripts
+    result = adjustSpacing(transcripts)
+    print(">>>>>>>>>>result=", result)
+
+    # 6) check speech speed & closing remarks
     words_count = 0 # count num of characters
     closing_remark_count = 0 # count num of sentences with appropriate closing remarks
     print("\n")
     print(">>>> 말하기 속도와 맺음말을 분석합니다.")
+    print(f'>>>> length result={len(result)}')
     for i in range(len(result)):
+        print(f'>>>> sentence_{i}={result[i].checked}')
         words_count += countNumOfWords(result[i].checked)
         closing_remark_count += checkClosingRemarks(result[i].checked)
+    print(">>>>>>>>>>words_count=", words_count)
+    print(">>>>>>>>>>closing_remark_count=", closing_remark_count)
 
     # 6) delete s3 files and transcribe job
     deleteTranscribeJob(wav_file_title, save_file_count)

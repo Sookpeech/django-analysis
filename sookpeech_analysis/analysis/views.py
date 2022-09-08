@@ -8,6 +8,9 @@ import subprocess
 from moviepy.editor import *
 from .voice_analysis import main_analysis as ma_voice
 from .video_analysis import main_analysis as ma_video
+from .make_chart import draw_chart as dc
+from .make_chart import upload_chart_to_s3 as ucts
+from .make_chart import delete_image as di
 
 def test(request):
     return JsonResponse({
@@ -38,17 +41,20 @@ def analysis(request, user_id, practice_id, gender, pose_sensitivity, eyes_sensi
         print(">>>> step: 음성 분석")
         voice_analysis_results = ma_voice.start_analysis(user_id, practice_id, gender)
 
-        # 5) Json 형태로 response
         analysis_results = dict(video_analysis_results, **voice_analysis_results)
-        response = requests.post(
-            f'http://3.36.74.60/api/practices/analysis_complete/{practice_id}',
-            json = json.dumps(analysis_results)
-        )
-        return JsonResponse({"status_code": response.status_code})
+        # 5) 차트 이미지로 저장 및 업로드하기
+        analysis_results = dict(video_dict, **voice_dict)
+        dc(analysis_results, user_id, practice_id, gender)
+        ucts(user_id, practice_id)
+        di(user_id, practice_id)
+
+        # 6) Json 형태로 response
+        return JsonResponse((analysis_results))
 
 
     except Exception as e:
         print(e)
         return JsonResponse({
-            'response': 'fail to access to s3 files'
+            'response': 'fail to access to s3 files',
+            'error': e
         })
