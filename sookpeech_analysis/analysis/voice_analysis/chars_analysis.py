@@ -12,7 +12,6 @@ def adjustSpacing(transcripts):
         new_transcripts.append(new_sent)
 
     result = spell_checker.check(new_transcripts)
-
     return result
 
 def countNumOfWords(transcript):
