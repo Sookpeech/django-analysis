@@ -12,10 +12,6 @@ def start_analysis(user_id, practice_id, pose_sensitivity, eyes_sensitivity):
     eyes_result = eyes_tracking(mp4_file_path, mp4_file_title, eyes_sensitivity)
 
     video_result = dict(pose_result, **eyes_result)
-    video_result = dict(
-        {"pose": pose_result},
-        **{"eyes": eyes_result}
-    )
     
     # mp4 파일 삭제
     file_path = f'{mp4_file_path}{mp4_file_title}.mp4'

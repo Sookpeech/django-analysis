@@ -1,4 +1,3 @@
-from msilib.schema import Media
 from urllib import request
 from ast import literal_eval
 import boto3

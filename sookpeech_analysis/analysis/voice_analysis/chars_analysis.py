@@ -1,4 +1,3 @@
-from hanspell import spell_checker
 import urllib3
 import json
 

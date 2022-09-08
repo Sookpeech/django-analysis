@@ -48,11 +48,11 @@ def start_analysis(user_id, practice_id, gender):
     print(">>>>>>>>>>words_count=", words_count)
     print(">>>>>>>>>>closing_remark_count=", closing_remark_count)
 
-    # 7) delete s3 files and transcribe job
+    # 6) delete s3 files and transcribe job
     deleteTranscribeJob(wav_file_title, save_file_count)
     deleteS3WavFile(user_id)
 
-    # TODO: 8) wav file, mp4 file 삭제
+    # 7) wav file, mp4 file 삭제
     file_path = f'{wav_file_path}{wav_file_title}'
     for i in range(chunk_count):
         if os.path.exists(f'{file_path}_{i}.wav'):

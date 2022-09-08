@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import boto3
-import json
+import json, requests
 import subprocess
 from moviepy.editor import *
 from .voice_analysis import main_analysis as ma_voice
@@ -14,7 +14,7 @@ from .make_chart import delete_image as di
 
 def test(request):
     return JsonResponse({
-        "response": "success"
+        "response": "test success"
     })
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -36,13 +36,12 @@ def analysis(request, user_id, practice_id, gender, pose_sensitivity, eyes_sensi
         # TODO: 3) 영상 분석
         print(">>>> step: 영상 분석")
         video_analysis_results = ma_video.start_analysis(user_id, practice_id, pose_sensitivity, eyes_sensitivity)
-        video_dict = {"video": video_analysis_results}
 
         # 4) 음성 분석
         print(">>>> step: 음성 분석")
         voice_analysis_results = ma_voice.start_analysis(user_id, practice_id, gender)
-        voice_dict = {"voice": voice_analysis_results}
 
+        analysis_results = dict(video_analysis_results, **voice_analysis_results)
         # 5) 차트 이미지로 저장 및 업로드하기
         analysis_results = dict(video_dict, **voice_dict)
         dc(analysis_results, user_id, practice_id, gender)
